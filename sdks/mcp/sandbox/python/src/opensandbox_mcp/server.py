@@ -214,8 +214,10 @@ def register_tools(
                 progress=0.3, total=1.0, message="Creating sandbox"
             )
 
-        # Dynamically compile the volumes configuration using native SDK models
         volumes = None
+        if (host_path is not None) != (mount_path is not None):
+            raise ValueError("Both 'host_path' and 'mount_path' must be provided together to enable persistence.")
+
         if host_path and mount_path:
             from opensandbox.models.sandboxes import Host, Volume
 
@@ -223,7 +225,7 @@ def register_tools(
                 Volume(
                     name="mcp-persistent-storage",
                     host=Host(path=host_path),
-                    mountPath=mount_path,
+                    mount_path=mount_path,
                 )
             ]
 
